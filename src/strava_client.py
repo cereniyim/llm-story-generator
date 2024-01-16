@@ -72,8 +72,7 @@ class StravaClient:
             "client_id": os.getenv("STRAVA_CLIENT_ID"),
             "client_secret": os.getenv("STRAVA_CLIENT_SECRET"),
             "refresh_token": cls._refresh_token,
-            "grant_type": "re fresh_token",
-            "f": "json",
+            "grant_type": "refresh_token",
         }
         response = requests.post(cls._access_token_uri, data=payload)
         data = response.json()
@@ -83,8 +82,9 @@ class StravaClient:
 
     def get_most_recent_activities(self, num_recent_activities=3) -> list[dict]:
         """
-        Gets most recent activities from Strava API. Assumes activities are sorted by date, so it queries all the pages
-        until Strava API does not provide any data. Returns parsed activities with only certain keys.
+        Gets most recent activities from Strava API. Assumes activities are sorted by date. It queries all the pages
+        until Strava API does not provide any data, because there is no metadata returned about pagination. Returns
+        parsed activities with only certain keys.
 
         Parameters
         ----------
@@ -102,11 +102,11 @@ class StravaClient:
             - total_elevation_gain
 
         """
-        header = {"Authorization": f"{self._token_type} {self._access_token}"}
         activities = []
         page_number = 1
         while True:
             uri = f"{self._activity_uri}?page={page_number}"
+            header = {"Authorization": f"{self._token_type} {self._access_token}"}
             response = requests.get(uri, headers=header)
             self._handle_errors(response)
             data = response.json()

@@ -21,7 +21,7 @@ def test_authenticate():
 
 
 @pytest.mark.skip(reason="Integration test")
-def test_refresh():
+def test_refresh_token():
     client = StravaClient()
     StravaClient._refresh_token = "REPLACE ME"
     StravaClient._access_token = "REPLACE ME"
