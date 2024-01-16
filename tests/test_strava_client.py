@@ -55,11 +55,10 @@ def test_get_most_recent_activities():
 
     assert activities == [
         {
-            "average_speed": 1.902,
             "distance": 117.9,
-            "max_speed": 3.3,
-            "moving_time": 62,
-            "total_elevation_gain": 0.0,
+            "speed": 3.3,
+            "time": 62,
+            "elevation": 0.0,
         }
     ]
 
@@ -100,11 +99,10 @@ def test_get_activity_200(setup_mock_success, setup_data):
     result = client.get_activity(activity_id)
 
     assert result == {
-        "average_speed": 25.0,
-        "max_speed": 60.0,
+        "speed": 60.0,
         "distance": 100.0,
-        "moving_time": 120,
-        "total_elevation_gain": 200,
+        "time": 120,
+        "elevation": 200,
     }
     # drops unnecessary key, value pairs
 
