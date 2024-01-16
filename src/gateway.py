@@ -53,6 +53,9 @@ class MongoDBGateway:
         -------
         dict
             A dictionary representing the updated activity with the following keys:
+            - `activity_id`
+            - `story_title`
+            - `story_content`
 
         """
         self._collection.update_one(
