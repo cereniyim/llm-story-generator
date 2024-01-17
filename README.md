@@ -2,7 +2,8 @@
 LLM based app that generates brief stories using Strava activity data.
 
 ## Project Summary & Main Purpose
-FastAPI based web service designed to run on local machines that creates stories using Strava data.
+REST API (uses FastAPI under the hood) based web service designed to run on local machines that creates stories using 
+Strava data.
 
 Users are authenticated through Strava. Web service allows users to get their last 3 activities. 
 
@@ -139,6 +140,6 @@ Add repository path to PYTHONPATH
 export PYTHONPATH=<path-to-your-repo-root>
 ```
 
-Change to project root directory and run unit tests
+Run unit tests
 ```shell script
 py.test tests
