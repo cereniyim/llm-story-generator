@@ -117,7 +117,7 @@ development cycle and decreases the potential of bugs.
     ├── src                               <- Core components
     │   ├── gateway.py                    <- MongoDB Gateway impleementation
     │   ├── strava_client.py              <- StravaClient implementation
-    │   ├── generators.py                 <- LLM inference implemntation
+    │   ├── generators.py                 <- LLM inference implementation
     ├── app                               <- fastAPI app 
     │   ├── routers                       <- namesapces
     │   │   ├── activities.py             <- GET, PUT, POST endpoint implemetations
