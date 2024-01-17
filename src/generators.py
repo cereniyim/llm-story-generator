@@ -9,16 +9,16 @@ from langchain.prompts import PromptTemplate
 load_dotenv()
 
 
-class AIGenerator(ABC):
-    @abstractmethod
-    def generate(self, input_: dict):
-        pass
-
-
 @dataclass
 class Story:
     story_title: str
     story_content: str
+
+
+class AIGenerator(ABC):
+    @abstractmethod
+    def generate(self, input_: dict):
+        pass
 
 
 class AIStoryGenerator(AIGenerator):
@@ -82,7 +82,7 @@ class AIImageGenerator(AIGenerator):
 
         Parameters
         ----------
-        story: dict with following keys
+        story: dictionary with following keys
             - story_title
             - story_content
 
