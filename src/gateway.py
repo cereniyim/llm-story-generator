@@ -11,13 +11,13 @@ class MongoDBGateway:
         self._db = self._client[db_name]
         self._collection = self._db[collection_name]
 
-    def get(self, activity_id: int) -> dict:
+    def get(self, document_id: int) -> dict:
         """
         Retrieve the document from the collection with the given activity ID.
 
         Parameters
         ----------
-        activity_id : int
+        document_id : int
             The activity ID of the document to retrieve.
 
         Returns
@@ -31,50 +31,58 @@ class MongoDBGateway:
             If no document with the specified activity ID is found in the collection.
 
         """
-        result = self._collection.find_one({"activity_id": activity_id}, {"_id": 0})
+        result = self._collection.find_one({"activity_id": document_id}, {"_id": 0})
         if result is None:
-            raise NoResultFound(f"Activity {activity_id} not found")
+            raise NoResultFound(f"Activity {document_id} not found")
         return result
 
-    def update(self, activity_id: int, title: str, content: str) -> dict:
+    def save_one(self, document: dict) -> None:
         """
-        Update activity with the given title and content
+        Saves the document to MongoDB
 
         Parameters
         ----------
-        activity_id : int
-            The ID of the activity to be updated.
-        title : str
-            The new title to be assigned to the activity.
-        content : str
-            The new content to be assigned to the activity.
+        document : dict
+            The document to be saved in the collection.
+
+        Returns
+        -------
+        None
+
+        """
+        self._collection.insert_one(document)
+
+    def update(self, document: dict, update_dict: dict) -> dict:
+        """
+        Update activity with the given update dictionary
+
+        Parameters
+        ----------
+        document : dict
+            The activity to be updated.
+        update_dict: dict
+            Key, value pairs that will be used to update the activity
 
         Returns
         -------
         dict
-            A dictionary representing the updated activity with the following keys:
-            - `activity_id`
-            - `story_title`
-            - `story_content`
+            A dictionary representing the updated activity with the new keys
 
         """
         self._collection.update_one(
-            {"activity_id": activity_id},
-            {"$set": {"story_title": title, "story_content": content}},
+            {"activity_id": document["activity_id"]},
+            {"$set": update_dict},
         )
-        return {
-            "activity_id": activity_id,
-            "story_title": title,
-            "story_content": content,
-        }
+        document.update(update_dict)
+        return document
 
-    def bulk_save(self, activities: list[dict]) -> None:
+    def bulk_save(self, documents: list[dict]) -> None:
         """
         This method bulk saves activities by inserting multiple documents into the specified collection.
 
         Parameters
         ----------
-        activities : list[dict]
+        documents : list[dict]
             A list containing dictionaries representing the activities to be saved. Each dictionary represents an activity.
 
         Returns
@@ -82,7 +90,7 @@ class MongoDBGateway:
         None
 
         """
-        self._collection.insert_many(activities)
+        self._collection.insert_many(documents)
 
     def get_processed_activities(self) -> list[dict]:
         """

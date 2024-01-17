@@ -21,8 +21,8 @@ class ActivityBadRequestError(Exception):
 class StravaClient:
     _access_token_uri = "https://www.strava.com/oauth/token"
     _token_type = "Bearer"
+    _refresh_token = os.environ.get("STRAVA_REFRESH_TOKEN")
     _access_token = None
-    _refresh_token = None
     _first_call = True
 
     def __init__(self, activity_uri: str = "https://www.strava.com/api/v3/activities/"):
@@ -66,6 +66,7 @@ class StravaClient:
             This method requires environment variables:
                 - STRAVA_CLIENT_ID: The client ID for your Strava application
                 - STRAVA_CLIENT_SECRET: The client secret for your Strava application
+                - STRAVA_REFRESH_TOKEN: The refresh token for your Strava application
 
         """
         payload = {
@@ -95,6 +96,7 @@ class StravaClient:
         -------
         parsed_activities: list[dict]
             activities that have the following keys:
+            - activity_id
             - distance
             - speed
             - time
@@ -132,6 +134,7 @@ class StravaClient:
         -------
         result: dict
             A dictionary containing the information related to the retrieved activity with following keys:
+            - activity_id
             - distance
             - speed
             - time
@@ -144,12 +147,15 @@ class StravaClient:
             headers=header,
         )
         self._handle_errors(response)
-        result = self._parse_response(response.json())
+        data = response.json()
+        data.update({"id": activity_id})
+        result = self._parse_response(data)
         return result
 
     @staticmethod
     def _parse_response(raw_response: dict) -> dict:
         return {
+            "activity_id": raw_response["id"],
             "speed": raw_response["max_speed"],
             "distance": raw_response["distance"],
             "time": raw_response["moving_time"],
