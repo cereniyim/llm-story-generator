@@ -1,5 +1,11 @@
 from dataclasses import dataclass
 
+from dotenv import load_dotenv
+from langchain import HuggingFaceHub, LLMChain
+from langchain.prompts import PromptTemplate
+
+load_dotenv()
+
 
 @dataclass
 class Story:
@@ -9,24 +15,46 @@ class Story:
 
 class StoryGenerator:
     def __init__(self):
-        # used pre-trained model as attribute
-        pass
+        self._llm_model = HuggingFaceHub(
+            repo_id="openchat/openchat-3.5-0106",
+        )
+        self._story_prompt_template: PromptTemplate = PromptTemplate(
+            input_variables=["metrics"],
+            template="Write me a sentence, including these phrases: {metrics}. "
+            "Then add 2 more sentences to make it a story. Provide a Title at the beginning.",
+        )
+        # TODO figure out why sentence is abruptly finishing
 
-    def generate_story(self, activity: dict) -> Story:
+    def generate(self, activity: dict) -> Story:
         """
-        Generates a title and a 50 word story for the given input with a Langchain model
+        Generates story and a title with https://huggingface.co/openchat/openchat-3.5-0106 model with the
+        given activity metrics
+
         Parameters
         ----------
-        speed
-        distance
-        moving_time
-        elevation_gain
+        activity : dict
+            A dictionary containing the metrics of the activity. Expected keys:
+            - `speed`
+            - `distance`
+            - `time`
+            - `elevation`
 
         Returns
         -------
+        Story
+            A `Story` object with
+            - `title`
+            - `content`
 
         """
-        pass
+        story_llm_chain = LLMChain(
+            prompt=self._story_prompt_template, llm=self._llm_model, verbose=False
+        )
+        prompt_metrics = ", ".join(f"{key} {value}" for key, value in activity.items())
+        story = story_llm_chain.run(prompt_metrics)
+        title = story.split("Title: ")[1].split("\n")[0]
+        content = story.replace(f"\n\nTitle: {title}\n\n", "")
+        return Story(title=title, content=content)
 
 
 class ImageGenerator:

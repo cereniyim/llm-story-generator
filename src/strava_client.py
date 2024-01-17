@@ -95,11 +95,10 @@ class StravaClient:
         -------
         parsed_activities: list[dict]
             activities that have the following keys:
-            - average_speed
             - distance
-            - max_speed
-            - moving_time
-            - total_elevation_gain
+            - speed
+            - time
+            - elevation
 
         """
         activities = []
@@ -133,11 +132,10 @@ class StravaClient:
         -------
         result: dict
             A dictionary containing the information related to the retrieved activity with following keys:
-            - average_speed
             - distance
-            - max_speed
-            - moving_time
-            - total_elevation_gain
+            - speed
+            - time
+            - elevation
 
         """
         header = {"Authorization": f"{self._token_type} {self._access_token}"}
@@ -152,11 +150,10 @@ class StravaClient:
     @staticmethod
     def _parse_response(raw_response: dict) -> dict:
         return {
-            "average_speed": raw_response["average_speed"],
-            "max_speed": raw_response["max_speed"],
+            "speed": raw_response["max_speed"],
             "distance": raw_response["distance"],
-            "moving_time": raw_response["moving_time"],
-            "total_elevation_gain": raw_response["total_elevation_gain"],
+            "time": raw_response["moving_time"],
+            "elevation": raw_response["total_elevation_gain"],
         }
 
     @staticmethod

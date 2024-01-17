@@ -7,3 +7,5 @@ uvicorn==0.23.2
 httpx==0.25.0
 pymongo==4.6.1
 python-dotenv==1.0.0
+langchain==0.1.0
+huggingface_hub==0.20.2
