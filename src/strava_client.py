@@ -21,8 +21,8 @@ class ActivityBadRequestError(Exception):
 class StravaClient:
     _access_token_uri = "https://www.strava.com/oauth/token"
     _token_type = "Bearer"
+    _refresh_token = os.environ.get("STRAVA_REFRESH_TOKEN")
     _access_token = None
-    _refresh_token = None
     _first_call = True
 
     def __init__(self, activity_uri: str = "https://www.strava.com/api/v3/activities/"):
@@ -66,6 +66,7 @@ class StravaClient:
             This method requires environment variables:
                 - STRAVA_CLIENT_ID: The client ID for your Strava application
                 - STRAVA_CLIENT_SECRET: The client secret for your Strava application
+                - STRAVA_REFRESH_TOKEN: The refresh token for your Strava application
 
         """
         payload = {
