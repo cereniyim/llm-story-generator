@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 from dotenv import load_dotenv
-from langchain import HuggingFaceHub, LLMChain
+from langchain_community.llms import HuggingFaceHub
+from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 
 load_dotenv()
