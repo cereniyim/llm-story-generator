@@ -32,26 +32,29 @@ def test_refresh_token():
 @pytest.mark.skip(reason="Integration test")
 def test_get_activity():
     client = StravaClient()
-    StravaClient._refresh_token = "REPLACE ME"
-    StravaClient._access_token = "REPLACE ME"
 
     client.refresh_token()
     activity = client.get_activity(309525343)
 
-    assert len(activity) > 0
+    assert activity == {
+        "activity_id": 309525343,
+        "distance": 117.9,
+        "elevation": 0.0,
+        "speed": 3.3,
+        "time": 62,
+    }
 
 
 @pytest.mark.skip(reason="Integration test")
 def test_get_most_recent_activities():
     client = StravaClient()
-    StravaClient._refresh_token = "REPLACE ME"
-    StravaClient._access_token = "REPLACE ME"
+    client.refresh_token()
 
-    # StravaClient.refresh_token()
     activities = client.get_most_recent_activities()
 
     assert activities == [
         {
+            "activity_id": 309525343,
             "distance": 117.9,
             "speed": 3.3,
             "time": 62,
@@ -63,7 +66,7 @@ def test_get_most_recent_activities():
 @pytest.fixture
 def setup_data():
     activity_uri = "https://mock_uri/activity/"
-    activity_id = "1234"
+    activity_id = 1234
     return activity_uri, activity_id
 
 
@@ -72,6 +75,7 @@ def setup_mock_success(setup_data):
     activity_uri, activity_id = setup_data
 
     mock_resp = {
+        "activity_id": activity_id,
         "average_speed": 25.0,
         "max_speed": 60.0,
         "distance": 100.0,
@@ -96,6 +100,7 @@ def test_get_activity_200(setup_mock_success, setup_data):
     result = client.get_activity(activity_id)
 
     assert result == {
+        "activity_id": activity_id,
         "speed": 60.0,
         "distance": 100.0,
         "time": 120,

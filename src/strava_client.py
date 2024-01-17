@@ -96,6 +96,7 @@ class StravaClient:
         -------
         parsed_activities: list[dict]
             activities that have the following keys:
+            - activity_id
             - distance
             - speed
             - time
@@ -133,6 +134,7 @@ class StravaClient:
         -------
         result: dict
             A dictionary containing the information related to the retrieved activity with following keys:
+            - activity_id
             - distance
             - speed
             - time
@@ -145,12 +147,15 @@ class StravaClient:
             headers=header,
         )
         self._handle_errors(response)
-        result = self._parse_response(response.json())
+        data = response.json()
+        data.update({"id": activity_id})
+        result = self._parse_response(data)
         return result
 
     @staticmethod
     def _parse_response(raw_response: dict) -> dict:
         return {
+            "activity_id": raw_response["id"],
             "speed": raw_response["max_speed"],
             "distance": raw_response["distance"],
             "time": raw_response["moving_time"],
