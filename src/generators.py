@@ -1,3 +1,4 @@
+from abc import abstractmethod, ABC
 from dataclasses import dataclass
 
 from dotenv import load_dotenv
@@ -8,13 +9,19 @@ from langchain.prompts import PromptTemplate
 load_dotenv()
 
 
+class AIGenerator(ABC):
+    @abstractmethod
+    def generate(self, input_: dict):
+        pass
+
+
 @dataclass
 class Story:
     story_title: str
     story_content: str
 
 
-class StoryGenerator:
+class StoryGenerator(AIGenerator):
     def __init__(self):
         self._llm_model = HuggingFaceHub(
             repo_id="openchat/openchat-3.5-0106",
@@ -63,6 +70,32 @@ class StoryGenerator:
         return Story(story_title=title, story_content=content)
 
 
-class ImageGenerator:
-    # TODO
-    pass
+class ImageGenerator(AIGenerator):
+    def __init__(self):
+        # self._model: a text-to-image model
+        # self._image_uploader: a s3 client that uploads generated images to s3 buckets using boto3
+        pass
+
+    def generate(self, story: dict) -> str:
+        """
+        Generates image based on the story content and title provided
+
+        Parameters
+        ----------
+        story: dict with following keys
+            - story_title
+            - story_content
+
+        Returns
+        -------
+        Link to the image generated
+
+        """
+        # generate image with self._model.run() or predict or any inference method
+        # save generated image into temp directory
+        # make sure image size is reasonable so include that in prompt
+        # assign unique name to image file, UUID can be used
+        # upload image to s3 bucket self._image_uploader.upload(filename)
+        # delete the image file from temp directory
+        # return s3 URL of the uploaded image
+        raise NotImplementedError
