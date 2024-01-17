@@ -5,12 +5,14 @@ LLM based app that generates brief stories using Strava activity data.
 REST API (uses FastAPI under the hood) based web service designed to run on local machines that creates stories using 
 Strava data.
 
-Users are authenticated through Strava. Web service allows users to get their last 3 activities. 
+Users are authenticated through Strava. Web service allows users to get their last 3 activities. Available through 
+GET /activities/ endpoint.
 
-Then, an LLM model generates a story around 50 words for a given activity (might be a ride) based on the 
-speed (as max_speed), distance, time (as moving_time) and the elevation (as total_elevation_gain) of each activity.
+An LLM model generates a story around 50 words for a given activity (might be a ride) based on the 
+speed (as max_speed), distance, time (as moving_time) and the elevation (as total_elevation_gain) of each activity. 
+Available through PUT /activities/ endpoint.
 
-Moreover, users can list their processed activities.
+Moreover, users can list their processed activities. Available through GET /activities/processed/ endpoint.
 
 The service has 3 endpoints in `activities` namespace:
 
@@ -27,7 +29,6 @@ activity is not present in the database then gets the activity from Strava.
 story and title assigned. By default, it gets last 3 activities.
 ![img.png](images/get_endpoint.png)
 
-
 ## How to Install and Use
 
 **Pull Mongo Docker image**: It will pull the image from Docker Hub.
@@ -35,7 +36,7 @@ story and title assigned. By default, it gets last 3 activities.
 docker pull mongo:latest
 ```
 
-**Create local DB**
+**Create local MongoDB container by running the image**
 ```shell script
 docker run --name mongo -p 27017:27017 -d mongo:latest
 ```
@@ -54,7 +55,7 @@ must-have requirements with a readable, high-quality, well-tested and well-docum
 ### Using pre-trained LLM model from Hugging Face
 I experimented with several text generation NLP models, and after the experimentation I concluded that OpenChat model yields
 the most logical results. Also, it is a popular and well-maintained model. Model details can be found [here](https://github.com/imoneoi/openchat)
-and model paper is available [here](https://arxiv.org/pdf/2309.11235.pdf).
+and the paper is available [here](https://arxiv.org/pdf/2309.11235.pdf).
 
 It is a generalist model that is fine-tuned on several open-source language models with mixed-quality data.
 
@@ -64,13 +65,13 @@ have a widespread use.
 Moreover, to be able to experiment with different models, I used Hugging Face Hub and to keep the local environment lightweight.
 
 ### Using MongoDB as database solution
-I used noSQL DB (MongoDB) as the database solution. It requires less pre-schema planning and design. Also, it allows 
+I used noSQL DB (MongoDB) as the database solution. It requires less schema pre-planning and design. Also, it allows 
 flexibility through documents. The flexible schema allowed me to do extensive integration testing.
 
 In the context of a production application, mongoDB allows horizontal scaling through sharding. Assuming that there will be a 
-terabytes of data for a chatbot application, Mongo DB could be a reasonable choice from that perspective as well.
+terabytes of data for MarvinAI, Mongo DB could be a reasonable choice from that perspective as well.
 
-Also, thinking from the production-scale chatbot application has motivated me to select MongoDB as database solution.
+Also, thinking from the production-scale chatbot application has motivated me to select MongoDB as the database solution.
 
 ### Strava authentication logic
 One of the requirements was to authenticate users through Strava. I embedded authentication logic in the web service to be able
@@ -81,9 +82,10 @@ authentication (only required for the first use), access token refresh and activ
 
 I kept necessary environment variables and secrets in a local `.env` file and loaded them during runtime.
 
-Moreover, with the wrapping of errors and `refresh_token` logic, I allowed the service to refresh the token whenever expires.
+Moreover, the service to refresh the token whenever expires with the wrapping of errors and `refresh_token` method implementation.
 
 ### Image generation as bonus points
+TODO
 Please see `src/generators.py` for the design and pseudocode implementation of image generation feature.
 
 ## Some Further System Improvements for a Production-Ready Service
@@ -91,7 +93,7 @@ Please see `src/generators.py` for the design and pseudocode implementation of i
 The core component of this web service is an LLM model. Whether it is developed in-house or a pre-trained model it 
 should be tested extensively. One example could be testing against edge cases like profanity, AI hallucinations and so on. 
 
-Also, some guardrails can be implemented before going into the production E.g. MarvinAI should not answer any questions to 
+Also, some guardrails should be implemented before going into the production E.g. MarvinAI should not answer any questions that
 disclose employee salaries even though it is asked to provide.
 
 All in all, the service should be well-tested from human-level judgement perspective.
@@ -105,7 +107,7 @@ If this had been a production web service, the secrets that are required by clas
 in a Secret Manager tool.
 
 ### Implement CI/CD pipelines
-Implement CI/CD pipelines so that the testing (and deployment) process is automated. GitHub Actions can be one solution 
+Implement CI/CD pipelines so that the testing (and deployment) process is automated. GitHub Actions can be a tool
 for that. 
 
 For CI, whenever there is a new build, all unit tests are run. When implemented with high coverage of unit tests, it automates the 
