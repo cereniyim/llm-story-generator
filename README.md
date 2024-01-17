@@ -120,7 +120,7 @@ development cycle and decreases the potential of bugs.
     │   ├── generators.py                 <- LLM inference implemntation
     ├── app                               <- fastAPI app 
     │   ├── routers                       <- namesapces
-    │   │   ├── activities                <- GET, PUT, POST endpoint implemetations
+    │   │   ├── activities.py             <- GET, PUT, POST endpoint implemetations
     │   ├── data_models.py                <- Output model classes for the endpoints
     │   ├── main.py                       <- fastAPI app implementation
     ├── images                            <- Images used in the README
