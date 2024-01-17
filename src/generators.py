@@ -50,7 +50,9 @@ class StoryGenerator:
         story_llm_chain = LLMChain(
             prompt=self._story_prompt_template, llm=self._llm_model, verbose=False
         )
-        prompt_metrics = ", ".join(f"{key} {value}" for key, value in activity.items())
+        metrics = activity.copy()
+        metrics.pop("activity_id")
+        prompt_metrics = ", ".join(f"{key} {value}" for key, value in metrics.items())
         story = story_llm_chain.run(prompt_metrics)
         title = story.split("Title: ")[1].split("\n")[0]
         content = story.replace(f"\n\nTitle: {title}\n\n", "")
