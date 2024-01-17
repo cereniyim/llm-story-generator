@@ -11,6 +11,7 @@ client = TestClient(app)
 def test_get_all_processed_activities_200(mock_get_processed_activities):
     activities = [
         {
+            "activity_id": 1,
             "time": 120,
             "elevation": 50.5,
             "speed": 60,
@@ -19,6 +20,7 @@ def test_get_all_processed_activities_200(mock_get_processed_activities):
             "story_content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et augue id nunc fermentum malesuada in sed sapien. Aliquam malesuada eu enim non convallis. Donec id sapien arcu.",
         },
         {
+            "activity_id": 2,
             "time": 500,
             "elevation": 50.5,
             "speed": 23,
