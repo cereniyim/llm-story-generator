@@ -21,7 +21,7 @@ class Story:
     story_content: str
 
 
-class StoryGenerator(AIGenerator):
+class AIStoryGenerator(AIGenerator):
     def __init__(self):
         self._llm_model = HuggingFaceHub(
             repo_id="openchat/openchat-3.5-0106",
@@ -70,7 +70,7 @@ class StoryGenerator(AIGenerator):
         return Story(story_title=title, story_content=content)
 
 
-class ImageGenerator(AIGenerator):
+class AIImageGenerator(AIGenerator):
     def __init__(self):
         # self._model: a text-to-image model
         # self._image_uploader: a s3 client that uploads generated images to s3 buckets using boto3
