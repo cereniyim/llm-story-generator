@@ -55,7 +55,11 @@ class StoryGenerator:
         metrics.pop("activity_id")
         prompt_metrics = ", ".join(f"{key} {value}" for key, value in metrics.items())
         story = story_llm_chain.run(prompt_metrics)
-        title, content = story.split("\n\n")[2:4]
+        title = story.split("Title: ")[1].split("\n")[0]
+        # Title always comes after "Title: "
+        content = sorted(story.split("\n\n"), key=lambda x: len(x), reverse=True)[0]
+        # LLM might continue to generate the story resulting in abruptly finishing sentences
+        # Get the logical text from the longest paragraph to have a meaningful story to read
         return Story(story_title=title, story_content=content)
 
 

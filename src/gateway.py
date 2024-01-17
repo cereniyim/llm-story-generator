@@ -50,11 +50,11 @@ class MongoDBGateway:
         None
 
         """
-        self._collection.insert_one(document)
+        self._collection.insert_one(document.copy())
 
     def update(self, document: dict, update_dict: dict) -> dict:
         """
-        Update activity with the given update dictionary
+        Update document with the given update dictionary
 
         Parameters
         ----------
