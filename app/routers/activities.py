@@ -1,8 +1,13 @@
 from fastapi import APIRouter, HTTPException
 
 from app.data_models import ProcessedActivity
-from src.gateway import MongoDBGateway
-from src.strava_client import StravaClient, ClientAuthenticationError
+from src.gateway import MongoDBGateway, NoResultFound
+from src.generators import StoryGenerator
+from src.strava_client import (
+    StravaClient,
+    ClientAuthenticationError,
+    ActivityNotFoundError,
+)
 
 router = APIRouter(
     responses={
@@ -16,7 +21,7 @@ gateway = MongoDBGateway(
     collection_name="activity_collection",
 )
 strava_client = StravaClient()
-StravaClient.refresh_token()
+strava_client.refresh_token()
 
 
 @router.get("/processed/")
@@ -50,14 +55,22 @@ def save_recent_strava_activities():
 def update_activity_with_story(activity_id: int) -> ProcessedActivity:
     # Serve one API endpoint that takes activity id as a parameter and returns the activity details, generated title and story
     # if activity not in DB get it from StravaClient
-    # MongoDBGateway()
-    #   try:
-    #       activity: dict = MongoDBGateway.get(activity_id)
-    #   except NoResultFound:
-    #       activity = StravaClient(activity_id)
-    # Generator initialization with proper prompts
-    # story = Generator().generate_story(activity)
-    # activity.update(story.as_dict)
-    # updated_activity = MongoDBGateway.update(activity)
-    # return updated_activity
-    pass
+    try:
+        activity = gateway.get(activity_id)
+    except NoResultFound:
+        try:
+            activity = strava_client.get_activity(activity_id)
+            gateway.save_one(activity)
+        except ClientAuthenticationError:
+            strava_client.refresh_token()
+            activity = strava_client.get_activity(activity_id)
+            gateway.save_one(activity)
+        except ActivityNotFoundError:
+            raise HTTPException(
+                status_code=404,
+                detail="Activity not found in the database nor the Strava Client",
+            )
+    story_generator = StoryGenerator()
+    story = story_generator.generate(activity)
+    updated_activity = gateway.update(activity, story.__dict__)
+    return ProcessedActivity(**updated_activity)
