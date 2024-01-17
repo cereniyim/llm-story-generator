@@ -1,18 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from app.data_models import ProcessedActivity
+from src.gateway import MongoDBGateway
 
-router = APIRouter()
+router = APIRouter(responses={404: {"description": "Not found"}})
+gateway = MongoDBGateway(
+    uri="mongodb://localhost:27017",
+    db_name="activities",
+    collection_name="activity_collection",
+)
 
 
 @router.get("/processed/")
-def get_all_processed_activities() -> ProcessedActivity:
+def get_all_processed_activities() -> list[ProcessedActivity]:
     # Serve one API endpoint to list all the activities the system has ever processed
-    # gets processed activities from MongoDB
-    # MongoDBGateway()
-    # all_activities = MongoDBGateway.get_processed_activities()
-    # return all_activities
-    pass
+    all_activities = gateway.get_processed_activities()
+    if not all_activities:
+        raise HTTPException(status_code=404, detail="No processed activities")
+    return [ProcessedActivity(**activity) for activity in all_activities]
 
 
 @router.post("/")
