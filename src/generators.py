@@ -9,8 +9,8 @@ load_dotenv()
 
 @dataclass
 class Story:
-    title: str
-    content: str
+    story_title: str
+    story_content: str
 
 
 class StoryGenerator:
@@ -43,8 +43,8 @@ class StoryGenerator:
         -------
         Story
             A `Story` object with
-            - `title`
-            - `content`
+            - `story_title`
+            - `story_content`
 
         """
         story_llm_chain = LLMChain(
@@ -56,7 +56,7 @@ class StoryGenerator:
         story = story_llm_chain.run(prompt_metrics)
         title = story.split("Title: ")[1].split("\n")[0]
         content = story.replace(f"\n\nTitle: {title}\n\n", "")
-        return Story(title=title, content=content)
+        return Story(story_title=title, story_content=content)
 
 
 class ImageGenerator:

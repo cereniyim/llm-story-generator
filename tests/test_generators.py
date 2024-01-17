@@ -12,7 +12,7 @@ def test_generate_story():
     story_generator = StoryGenerator()
     res = story_generator.generate(activity)
 
-    assert len(res.title) > 0
+    assert len(res.story_title) > 0
     for key, value in activity.items():
         if key != "activity_id":
-            assert str(int(value)) in res.content
+            assert str(int(value)) in res.story_content
