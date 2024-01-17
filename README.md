@@ -85,8 +85,22 @@ I kept necessary environment variables and secrets in a local `.env` file and lo
 Moreover, the service to refresh the token whenever expires with the wrapping of errors and `refresh_token` method implementation.
 
 ### Image generation as bonus points
-TODO
-Please see `src/generators.py` for the design and pseudocode implementation of image generation feature.
+Please see `src/generators.py` `AIImageGeneration` class for the design and pseudocode implementation of image generation feature.
+
+By calling `generate` method with `story.__dict__` on the instance of `AIIMageGeneration` in PUT /activities/ endpoint,
+this feature can be integrated into the service. `ProcessedActivity` model must be updated with `image_link` field
+as such:
+```python
+class ProcessedActivity(BaseModel):
+    activity_id: int
+    speed: float
+    distance: float
+    elevation: float
+    time: float
+    story_title: str
+    story_content: str
+    image_link: Optional[str] = None
+```
 
 ## Some Further System Improvements for a Production-Ready Service
 ### Extensive testing of LLM model
