@@ -2,13 +2,21 @@ from fastapi import APIRouter, HTTPException
 
 from app.data_models import ProcessedActivity
 from src.gateway import MongoDBGateway
+from src.strava_client import StravaClient, ClientAuthenticationError
 
-router = APIRouter(responses={404: {"description": "Not found"}})
+router = APIRouter(
+    responses={
+        404: {"description": "Not found"},
+        500: {"description": "Internal Server Error"},
+    }
+)
 gateway = MongoDBGateway(
     uri="mongodb://localhost:27017",
     db_name="activities",
     collection_name="activity_collection",
 )
+strava_client = StravaClient()
+StravaClient.refresh_token()
 
 
 @router.get("/processed/")
@@ -20,12 +28,22 @@ def get_all_processed_activities() -> list[ProcessedActivity]:
     return [ProcessedActivity(**activity) for activity in all_activities]
 
 
-@router.post("/")
+@router.post("/", status_code=201, response_model=dict)
 def save_recent_strava_activities():
     # gets last 3 activities from Strava saves them to DB
-    # activities = StravaClient().get_most_recent_activities()
-    # MongoDBGateway.bulk_save(activities)
-    pass
+    try:
+        activities = strava_client.get_most_recent_activities()
+    except ClientAuthenticationError:
+        StravaClient.refresh_token()
+        activities = strava_client.get_most_recent_activities()
+    if activities:
+        gateway.bulk_save(activities)
+        return {"message": f"Successfully saved {len(activities)} activities."}
+    else:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server Error when getting activities from Strava",
+        )
 
 
 @router.put("/{activity_id}/")
