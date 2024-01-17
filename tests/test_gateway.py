@@ -5,6 +5,8 @@ from src.generators import Story
 
 
 pytestmark = pytest.mark.skip(reason="requires MongoDB running locally")
+# TODO implement unit tests by mocking MongoDBGateway current tests requires MongoDB up and running locally
+# TODO make tests independent
 
 
 @pytest.fixture(scope="module")
