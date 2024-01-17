@@ -46,8 +46,41 @@ uvicorn app.main:app
 
 You can access it and its documentation on Swagger http://0.0.0.0:8000/docs
 
-## My Approach on Solving the Challenge and Key Architectural Decisions
-TODO
+## My approach on solving the challenge and key architectural decisions
+While working on the challenge, I kept my focus on having a reasonably-working-well MVP web service covering all the 
+must-have requirements with a readable, high-quality, well-tested and well-documented code.
+
+### Using pre-trained LLM model from Hugging Face
+I experimented with several text generation NLP models, and after the experimentation I concluded that OpenChat model yields
+the most logical results. Also, it is a popular and well-maintained model. Model details can be found [here](https://github.com/imoneoi/openchat)
+and model paper is available [here](https://arxiv.org/pdf/2309.11235.pdf).
+
+It is a generalist model that is fine-tuned on several open-source language models with mixed-quality data.
+
+I usually prefer to use open source packages/models if they are coming from a trusted source, well-maintained, and they
+have a widespread use.
+
+Moreover, to be able to experiment with different models, I used Hugging Face Hub and to keep the local environment lightweight.
+
+### Using MongoDB as database solution
+I used noSQL DB (MongoDB) as the database solution. It requires less pre-schema planning and design. Also, it allows 
+flexibility through documents. The flexible schema allowed me to do extensive integration testing.
+
+In the context of a production application, mongoDB allows horizontal scaling through sharding. Assuming that there will be a 
+terabytes of data for a chatbot application, Mongo DB could be a reasonable choice from that perspective as well.
+
+Also, thinking from the production-scale chatbot application has motivated me to select MongoDB as database solution.
+
+### Strava authentication logic
+One of the requirements was to authenticate users through Strava. I embedded authentication logic in the web service to be able
+to share the state of the authentication among different endpoints.
+
+I implemented a `StravaClient` which is a wrapper around [Strava API](https://developers.strava.com/docs/). It implements
+authentication (only required for the first use), access token refresh and activity querying functionalities.
+
+I kept necessary environment variables and secrets in a local `.env` file and loaded them during runtime.
+
+Moreover, with the wrapping of errors and `refresh_token` logic, I allowed the service to refresh the token whenever expires.
 
 ## Further System Improvements
 TODO
