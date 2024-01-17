@@ -113,7 +113,21 @@ development cycle and decreases the potential of bugs.
 
 ## For Developers
 ### Project organization
-TODO
+    ├── README.md                         <- The top-level README explaining the project
+    ├── src                               <- Core components
+    │   ├── gateway.py                    <- MongoDB Gateway impleementation
+    │   ├── strava_client.py              <- StravaClient implementation
+    │   ├── generators.py                 <- LLM inference implemntation
+    ├── app                               <- fastAPI app 
+    │   ├── routers                       <- namesapces
+    │   │   ├── activities                <- GET, PUT, POST endpoint implemetations
+    │   ├── data_models.py                <- Output model classes for the endpoints
+    │   ├── main.py                       <- fastAPI app implementation
+    ├── images                            <- Images used in the README
+    ├── tests                             <- Unit tests
+    ├── .gitignore                        <- Ignored files by git
+    ├── requirements.txt                  <- Required Python packages for the environment creation
+
 ### Setup local environment & run unit tests
 Change directory to your local repository
 ```shell script
