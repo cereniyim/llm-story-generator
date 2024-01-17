@@ -1,10 +1,12 @@
 from fastapi import APIRouter
 
+from app.data_models import ProcessedActivity
+
 router = APIRouter()
 
 
 @router.get("/processed/")
-def get_all_processed_activities():
+def get_all_processed_activities() -> ProcessedActivity:
     # Serve one API endpoint to list all the activities the system has ever processed
     # gets processed activities from MongoDB
     # MongoDBGateway()
@@ -22,7 +24,7 @@ def save_recent_strava_activities():
 
 
 @router.put("/{activity_id}/")
-def update_activity_with_story():
+def update_activity_with_story(activity_id: int) -> ProcessedActivity:
     # Serve one API endpoint that takes activity id as a parameter and returns the activity details, generated title and story
     # if activity not in DB get it from StravaClient
     # MongoDBGateway()
