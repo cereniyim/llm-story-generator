@@ -36,6 +36,22 @@ class MongoDBGateway:
             raise NoResultFound(f"Activity {activity_id} not found")
         return result
 
+    def save_one(self, document: dict) -> None:
+        """
+        Saves the document to MongoDB
+
+        Parameters
+        ----------
+        document : dict
+            The document to be saved in the collection.
+
+        Returns
+        -------
+        None
+
+        """
+        self._collection.insert_one(document)
+
     def update(self, activity: dict, update_dict: dict) -> dict:
         """
         Update activity with the given update dictionary

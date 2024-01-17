@@ -65,6 +65,13 @@ def test_update(gateway):
     assert gateway.get(1) == activity
 
 
+def test_save_one(gateway):
+    activity = {"activity_id": 47}
+    gateway.save_one(activity)
+
+    assert gateway.get(47) == {"activity_id": 47}
+
+
 def test_get_fails(gateway):
     with pytest.raises(NoResultFound):
         gateway.get(1000)
