@@ -1,4 +1,4 @@
-from src.generators import StoryGenerator
+from src.generators import AIStoryGenerator
 
 
 def test_generate_story():
@@ -9,7 +9,7 @@ def test_generate_story():
         "time": 120,
         "elevation": 200,
     }
-    story_generator = StoryGenerator()
+    story_generator = AIStoryGenerator()
     res = story_generator.generate(activity)
 
     assert len(res.story_title) > 0

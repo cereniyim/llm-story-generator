@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from app.data_models import ProcessedActivity
 from src.gateway import MongoDBGateway, NoResultFound
-from src.generators import StoryGenerator
+from src.generators import AIStoryGenerator
 from src.strava_client import (
     StravaClient,
     ClientAuthenticationError,
@@ -78,7 +78,7 @@ def update_activity_with_story(activity_id: int) -> ProcessedActivity:
                 status_code=404,
                 detail="Activity not found in the database nor the Strava Client",
             )
-    story_generator = StoryGenerator()
+    story_generator = AIStoryGenerator()
     story = story_generator.generate(activity)
     updated_activity = gateway.update(activity, story.__dict__)
     return ProcessedActivity(**updated_activity)
