@@ -82,8 +82,33 @@ I kept necessary environment variables and secrets in a local `.env` file and lo
 
 Moreover, with the wrapping of errors and `refresh_token` logic, I allowed the service to refresh the token whenever expires.
 
-## Further System Improvements
-TODO
+### Image generation as bonus points
+Please see `src/generators.py` for the design and pseudocode implementation of image generation feature.
+
+## Some Further System Improvements for a Production-Ready Service
+### Extensive testing of LLM model
+The core component of this web service is an LLM model. Whether it is developed in-house or a pre-trained model it 
+should be tested extensively. One example could be testing against edge cases like profanity, AI hallucinations and so on. 
+
+Also, some guardrails can be implemented before going into the production E.g. MarvinAI should not answer any questions to 
+disclose employee salaries even though it is asked to provide.
+
+All in all, the service should be well-tested from human-level judgement perspective.
+
+### Containerization
+Use Docker so that this service is deployable to any environment, for the production case that would be a cloud provider
+like GCP or AWS.
+
+### Store secrets securely in some secret manager
+If this had been a production web service, the secrets that are required by classes and components must be stored securely
+in a Secret Manager tool.
+
+### Implement CI/CD pipelines
+Implement CI/CD pipelines so that the testing (and deployment) process is automated. GitHub Actions can be one solution 
+for that. 
+
+For CI, whenever there is a new build, all unit tests are run. When implemented with high coverage of unit tests, it automates the 
+development cycle and decreases the potential of bugs.
 
 ## For Developers
 ### Project organization
