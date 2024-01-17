@@ -1,6 +1,7 @@
 import pytest
 
 from src.gateway import MongoDBGateway, NoResultFound
+from src.generators import Story
 
 
 pytestmark = pytest.mark.skip(reason="requires MongoDB running locally")
@@ -19,7 +20,11 @@ def test_bulk_save(gateway):
     activities = [
         {"activity_id": 1},
         {"activity_id": 2},
-        {"activity_id": 3, "story_title": "title", "story_content": "a story with multiple words"},
+        {
+            "activity_id": 3,
+            "story_title": "title",
+            "story_content": "a story with multiple words",
+        },
         {
             "activity_id": 4,
             "story_title": "Another title",
@@ -52,13 +57,12 @@ def test_get_success(gateway):
 
 
 def test_update(gateway):
-    updated_activity = {
-        "activity_id": 1,
-        "story_title": "title",
-        "story_content": "story",
-    }
-    gateway.update(1, "title", "story")
-    assert gateway.get(1) == updated_activity
+    activity = {"activity_id": 1}
+    story = Story("title", "story content")
+    gateway.update(activity, story.__dict__)
+
+    activity.update(story.__dict__)
+    assert gateway.get(1) == activity
 
 
 def test_get_fails(gateway):

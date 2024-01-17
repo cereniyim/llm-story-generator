@@ -36,37 +36,29 @@ class MongoDBGateway:
             raise NoResultFound(f"Activity {activity_id} not found")
         return result
 
-    def update(self, activity_id: int, title: str, content: str) -> dict:
+    def update(self, activity: dict, update_dict: dict) -> dict:
         """
-        Update activity with the given title and content
+        Update activity with the given update dictionary
 
         Parameters
         ----------
-        activity_id : int
-            The ID of the activity to be updated.
-        title : str
-            The new title to be assigned to the activity.
-        content : str
-            The new content to be assigned to the activity.
+        activity : dict
+            The activity to be updated.
+        update_dict: dict
+            Key, value pairs that will be used to update the activity
 
         Returns
         -------
         dict
-            A dictionary representing the updated activity with the following keys:
-            - `activity_id`
-            - `story_title`
-            - `story_content`
+            A dictionary representing the updated activity with the new keys
 
         """
         self._collection.update_one(
-            {"activity_id": activity_id},
-            {"$set": {"story_title": title, "story_content": content}},
+            {"activity_id": activity["activity_id"]},
+            {"$set": update_dict},
         )
-        return {
-            "activity_id": activity_id,
-            "story_title": title,
-            "story_content": content,
-        }
+        activity.update(update_dict)
+        return activity
 
     def bulk_save(self, activities: list[dict]) -> None:
         """
