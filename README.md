@@ -23,13 +23,28 @@ The service has 3 endpoints in `activities` namespace:
 **POST /activities/**: Creates activities from Strava. By default, it gets last 3 activities from Strava.
 ![img.png](images/post_endpoint.png)
 
+200 success response looks like this
+![img.png](images/post_201.png)
+
 **PUT /activities/**: Takes activity_id as a parameter and returns the activity details, generated title and story. If
 activity is not present in the database then gets the activity from Strava.
 ![img.png](images/put_endpoint.png)
 
+200 success response looks like this
+![img.png](images/put_200.png)
+
+404 not found response looks like this
+![img.png](images/put_404.png)
+
 **GET /activities/processed/**: Lists all the activities the system has ever processed. A processed activity has a
 story and title assigned.
 ![img.png](images/get_endpoint.png)
+
+200 success response looks like this
+![img.png](images/get_200.png)
+
+404 not found response looks like this
+![img.png](images/get_404.png)
 
 ## How to Install and Use
 
