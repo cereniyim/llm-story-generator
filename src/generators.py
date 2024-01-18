@@ -13,11 +13,12 @@ load_dotenv()
 class Story:
     story_title: str
     story_content: str
+    # story_image_link: Optional[str] = None
 
 
 class AIGenerator(ABC):
     @abstractmethod
-    def generate(self, input_: dict):
+    def generate(self, input_: dict) -> Story:
         pass
 
 
@@ -76,7 +77,7 @@ class AIImageGenerator(AIGenerator):
         # self._image_uploader: a s3 client that uploads generated images to s3 buckets using boto3
         pass
 
-    def generate(self, story: dict) -> str:
+    def generate(self, story: dict) -> Story:
         """
         Generates image based on the story content and title provided
 
@@ -88,7 +89,7 @@ class AIImageGenerator(AIGenerator):
 
         Returns
         -------
-        Link to the image generated
+        Story object with the image link added
 
         """
         # generate image with self._model.run() or predict or any inference method
