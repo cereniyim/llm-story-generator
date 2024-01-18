@@ -73,7 +73,7 @@ class AIStoryGenerator(AIGenerator):
 
 class AIImageGenerator(AIGenerator):
     def __init__(self):
-        # self._model: a text-to-image model
+        # self._model: a text-to-image pre-trained model
         # self._image_uploader: a s3 client that uploads generated images to s3 buckets using boto3
         pass
 
@@ -92,7 +92,7 @@ class AIImageGenerator(AIGenerator):
         Story object with the image link added
 
         """
-        # generate image with self._model.run() or predict or any inference method
+        # generate image with self._model.run() or predict or by calling any inference method
         # save generated image into temp directory
         # make sure image size is reasonable so include that in prompt
         # assign unique name to image file, UUID can be used
