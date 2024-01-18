@@ -76,7 +76,7 @@ def update_activity_with_story(activity_id: int) -> ProcessedActivity:
         except ActivityNotFoundError:
             raise HTTPException(
                 status_code=404,
-                detail="Activity not found in the database nor the Strava Client",
+                detail=f"Activity {activity_id} not found in database nor in Strava Client",
             )
     story_generator = AIStoryGenerator()
     story = story_generator.generate(activity)
