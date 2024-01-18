@@ -55,7 +55,6 @@ class StravaClient:
         cls._access_token = data["access_token"]
         cls._refresh_token = data["refresh_token"]
         cls._first_call = False
-        print("Authentication successful")
 
     @classmethod
     def refresh_token(cls):
@@ -79,7 +78,6 @@ class StravaClient:
         data = response.json()
         cls._access_token = data["access_token"]
         cls._refresh_token = data["refresh_token"]
-        print("Refreshed access token")
 
     def get_most_recent_activities(self, num_recent_activities=3) -> list[dict]:
         """

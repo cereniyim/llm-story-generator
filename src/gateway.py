@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 
 
-class NoResultFound(BaseException):
+class NoResultFound(Exception):
     pass
 
 
