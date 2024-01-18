@@ -17,7 +17,8 @@ def test_get_all_processed_activities_200(mock_get_processed_activities):
             "speed": 60,
             "distance": 35,
             "story_title": "A sunny day run",
-            "story_content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et augue id nunc fermentum malesuada in sed sapien. Aliquam malesuada eu enim non convallis. Donec id sapien arcu.",
+            "story_content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et augue id nunc fermentum"
+                             " malesuada in sed sapien. Aliquam malesuada eu enim non convallis. Donec id sapien arcu.",
         },
         {
             "activity_id": 2,
@@ -26,7 +27,8 @@ def test_get_all_processed_activities_200(mock_get_processed_activities):
             "speed": 23,
             "distance": 43.9,
             "story_title": "A cloudy day jog",
-            "story_content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et augue id nunc fermentum malesuada in sed sapien. Aliquam malesuada eu enim non convallis. Donec id sapien arcu.",
+            "story_content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et augue id nunc fermentum"
+                             " malesuada in sed sapien. Aliquam malesuada eu enim non convallis. Donec id sapien arcu.",
         },
     ]
     mock_get_processed_activities.return_value = activities

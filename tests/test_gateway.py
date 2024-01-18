@@ -34,6 +34,7 @@ def test_bulk_save(gateway):
         },
     ]
     gateway.bulk_save(activities)
+
     for idx, activity in enumerate(activities):
         activity.pop("_id")
         assert gateway.get(idx + 1) == activity
@@ -41,6 +42,7 @@ def test_bulk_save(gateway):
 
 def test_get_processed_activities(gateway):
     res = gateway.get_processed_activities()
+
     assert len(res) == 2
     assert res[0] == {
         "activity_id": 3,
