@@ -1,5 +1,5 @@
 # LLM Story Generator
-LLM based app that generates brief stories using Strava activity data.
+LLM based web service that generates brief stories using Strava activity data.
 
 ## Project Summary & Main Purpose
 REST API (uses FastAPI under the hood) based web service designed to run on local machines that creates stories using 
@@ -18,7 +18,7 @@ The service has 3 endpoints in `activities` namespace:
 
 ![img.png](images/swagger.png)
 
-**POST /activities/**: Creates activities from Strava.
+**POST /activities/**: Creates activities from Strava. By default, it gets last 3 activities from Strava.
 ![img.png](images/post_endpoint.png)
 
 **PUT /activities/**: Takes activity_id as a parameter and returns the activity details, generated title and story. If 
@@ -26,7 +26,7 @@ activity is not present in the database then gets the activity from Strava.
 ![img.png](images/put_endpoint.png)
 
 **GET /activities/processed/**: Lists all the activities the system has ever processed. A processed activity has a 
-story and title assigned. By default, it gets last 3 activities.
+story and title assigned.
 ![img.png](images/get_endpoint.png)
 
 ## How to Install and Use
@@ -87,14 +87,18 @@ have a widespread use.
 
 Moreover, to be able to experiment with different models, I used Hugging Face Hub and to keep the local environment lightweight.
 
+Implementation can be found in `src/generators.py`.
+
 ### Using MongoDB as database solution
 I used noSQL DB (MongoDB) as the database solution. It requires less schema pre-planning and design. Also, it allows 
 flexibility through documents. The flexible schema allowed me to do extensive integration testing.
 
-In the context of a production application, mongoDB allows horizontal scaling through sharding. Assuming that there will be a 
+In the context of a production application, mongoDB allows horizontal scaling through sharding. Assuming that there will be 
 terabytes of data for MarvinAI, Mongo DB could be a reasonable choice from that perspective as well.
 
 Also, thinking from the production-scale chatbot application has motivated me to select MongoDB as the database solution.
+
+Implementation can be found in `src/gateway.py`.
 
 ### Strava authentication logic
 One of the requirements was to authenticate users through Strava. I embedded authentication logic in the web service to be able
@@ -105,7 +109,9 @@ authentication (only required for the first use), access token refresh and activ
 
 I kept necessary environment variables and secrets in a local `.env` file and loaded them during runtime.
 
-Moreover, the service to refresh the token whenever expires with the wrapping of errors and `refresh_token` method implementation.
+Moreover, the service refreshes the token whenever expires with the wrapping of errors and `refresh_token` method implementation.
+
+Implementation can be found in `src/strava_client.py`.
 
 ### Image generation as bonus points
 Please see `src/generators.py` `AIImageGeneration` class for the design and pseudocode implementation of image generation feature.
@@ -154,13 +160,13 @@ development cycle and decreases the potential of bugs.
 ### Project organization
     ├── README.md                         <- The top-level README explaining the project
     ├── src                               <- Core components
-    │   ├── gateway.py                    <- MongoDB Gateway impleementation
+    │   ├── gateway.py                    <- MongoDBGateway impleementation
     │   ├── strava_client.py              <- StravaClient implementation
-    │   ├── generators.py                 <- LLM inference implementation
+    │   ├── generators.py                 <- LLM based inference implementation
     ├── app                               <- fastAPI app 
     │   ├── routers                       <- namesapces
-    │   │   ├── activities.py             <- GET, PUT, POST endpoint implemetations
-    │   ├── data_models.py                <- Output model classes for the endpoints
+    │   │   ├── activities.py             <- GET, PUT, POST endpoint implementations
+    │   ├── data_models.py                <- Output model class for the endpoints
     │   ├── main.py                       <- fastAPI app implementation
     ├── images                            <- Images used in the README
     ├── tests                             <- Unit tests
