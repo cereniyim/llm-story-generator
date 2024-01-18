@@ -9,3 +9,4 @@ class ProcessedActivity(BaseModel):
     time: float
     story_title: str
     story_content: str
+    # image_link: Optional[str] = None
