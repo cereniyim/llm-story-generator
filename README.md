@@ -20,14 +20,16 @@ The service has 3 endpoints in `activities` namespace:
 
 ![img.png](images/swagger.png)
 
-**POST /activities/**: Creates activities from Strava. By default, it gets last 3 activities from Strava.
+**POST /activities/**: Creates activities. Gets them from Strava then saves them to DB. By default, it gets last 3
+activities of a user.
 ![img.png](images/post_endpoint.png)
 
 200 success response looks like this
 ![img.png](images/post_201.png)
 
-**PUT /activities/**: Takes activity_id as a parameter and returns the activity details, generated title and story. If
-activity is not present in the database then gets the activity from Strava.
+**PUT /activities/**: Takes `activity_id` as a parameter, updates it with LLM-generated title and story. Then, returns
+the activity details, title and story. If activity is not present in the database then gets the activity from Strava and
+generates title and story and saves it to DB.
 ![img.png](images/put_endpoint.png)
 
 200 success response looks like this
@@ -36,8 +38,8 @@ activity is not present in the database then gets the activity from Strava.
 404 not found response looks like this
 ![img.png](images/put_404.png)
 
-**GET /activities/processed/**: Lists all the activities the system has ever processed. A processed activity has a
-story and title assigned.
+**GET /activities/processed/**: Lists all the activities the system has ever processed. Reads all processed activities
+from DB. A processed activity has a story and title assigned.
 ![img.png](images/get_endpoint.png)
 
 200 success response looks like this
@@ -148,8 +150,9 @@ Implementation can be found in `src/strava_client.py`.
 
 ### Image generation as bonus points
 
-Please see `src/generators.py` `AIImageGeneration` class for the design and pseudocode implementation of image
-generation feature.
+Please
+see [src/generators.py](https://github.com/cereniyim/llm-story-generator/blob/fcc410a89115f229ec2c009309f22abfa7b5f54b/src/generators.py#L74) `AIImageGeneration`
+class for the design and pseudocode implementation of image generation feature.
 
 By calling `generate` method with `story.__dict__` on the instance of `AIIMageGeneration` in PUT /activities/ endpoint,
 this feature can be integrated into the service. E.g.
@@ -206,7 +209,7 @@ automates the development cycle and decreases the potential of bugs.
 
     ├── README.md                         <- The top-level README explaining the project
     ├── src                               <- Core components
-    │   ├── gateway.py                    <- MongoDBGateway impleementation
+    │   ├── gateway.py                    <- MongoDBGateway implementation
     │   ├── strava_client.py              <- StravaClient implementation
     │   ├── generators.py                 <- LLM based inference implementation
     ├── app                               <- fastAPI app 
