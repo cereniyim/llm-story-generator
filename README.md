@@ -31,12 +31,35 @@ story and title assigned. By default, it gets last 3 activities.
 
 ## How to Install and Use
 
-**Pull Mongo Docker image**: It will pull the image from Docker Hub.
+In a terminal
+
+**Clone the repository and navigate to it**
+```shell script
+git clone git@github.com:cereniyim/llm-story-generator.git
+cd <path-to-your-local-repository>
+```
+
+**Create local conda environment**
+```shell script
+conda create --name llm-story-generator python=3.9.18
+```
+
+**Activate environment**
+```shell script
+conda activate llm-story-generator
+```
+
+**Install requirements**
+```shell script
+pip install -r requirements.txt
+```
+
+**Pull Mongo Docker image**
 ```shell script
 docker pull mongo:latest
 ```
 
-**Create local MongoDB container by running the image**
+**Create local MongoDB by spawning a container**
 ```shell script
 docker run --name mongo -p 27017:27017 -d mongo:latest
 ```
