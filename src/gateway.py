@@ -6,10 +6,22 @@ class NoResultFound(Exception):
 
 
 class MongoDBGateway:
+    _instance = None
+
     def __init__(self, uri: str, db_name: str, collection_name: str):
         self._client = MongoClient(uri)
         self._db = self._client[db_name]
         self._collection = self._db[collection_name]
+
+    @classmethod
+    def get_instance(cls):
+        if not cls._instance:
+            cls._instance = cls(
+                uri="mongodb://localhost:27017",
+                db_name="activities",
+                collection_name="activity_collection",
+            )
+        return cls._instance
 
     def get(self, document_id: int) -> dict:
         """
